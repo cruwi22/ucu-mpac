@@ -1,6 +1,6 @@
 package com.ucu.ucu_mpac;
 
-public class Favorites {
+public class History {
 	
 	private int id;
 	private String accessno;
@@ -17,13 +17,13 @@ public class Favorites {
 	private String completecn;
 	private String format;
 
-	public Favorites() { }
+	public History() { }
 
-	public Favorites(int id) {
+	public History(int id) {
 		this.id = id;
 	}
 	
-	public Favorites(int id, String accessno, String title, String author,
+	public History(int id, String accessno, String title, String author,
 			String publisher, String edition, String volume, String pages,
 			String cyear, String csection, String copies, String babarcode,
 			String completecn, String format) {
@@ -44,7 +44,7 @@ public class Favorites {
 		this.format = format;
 	}
 
-	public Favorites(String accessno, String title, String author,
+	public History(String accessno, String title, String author,
 			String publisher, String edition, String volume, String pages,
 			String cyear, String csection, String copies, String babarcode,
 			String completecn, String format) {

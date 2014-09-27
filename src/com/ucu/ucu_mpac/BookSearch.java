@@ -1,15 +1,18 @@
 package com.ucu.ucu_mpac;
 
+import java.sql.SQLException;
+
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class BookSearch extends Activity {
-	
+
 	DatabaseHandler db = new DatabaseHandler(this);
-	
+
 	TextView txtAccessno;
 	TextView txtTitle;
 	TextView txtAuthor;
@@ -28,7 +31,7 @@ public class BookSearch extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_book_search);
-		
+
 		txtAccessno = (TextView) findViewById(R.id.txtAccessno);
 		txtTitle = (TextView) findViewById(R.id.txtTitle);
 		txtAuthor = (TextView) findViewById(R.id.txtAuthor);
@@ -42,23 +45,39 @@ public class BookSearch extends Activity {
 		txtBabarcode = (TextView) findViewById(R.id.txtBabarcode);
 		txtCompletecn = (TextView) findViewById(R.id.txtCompletecn);
 		txtFormat = (TextView) findViewById(R.id.txtFormat);
-		
+
 		getIntentTask();
 	}
-	
+
 	public void clickAdd(View v) {
-		db.addFavorites(new Favorites(txtAccessno.getText().toString(), txtTitle.getText().toString(), txtAuthor.getText().toString(),
-									  txtPublisher.getText().toString(), txtEdition.getText().toString(), txtVolume.getText().toString(),
-									  txtPages.getText().toString(), txtCyear.getText().toString(), txtCsection.getText().toString(),
-									  txtCopies.getText().toString(), txtBabarcode.getText().toString(),
-									  txtCompletecn.getText().toString(), txtFormat.getText().toString()));
-		
-		Toast.makeText(getApplicationContext(), "Successfully added to your favorites", Toast.LENGTH_SHORT).show();
-		
+
+		try {
+
+			Cursor c = db.getAccessno(txtAccessno.getText().toString());
+
+			if (c.moveToFirst()) {
+				
+				Toast.makeText(getApplicationContext(), "It's already in the favorites", Toast.LENGTH_SHORT).show();
+				
+			} else {
+
+				db.addFavorites(new Favorites(txtAccessno.getText().toString(),
+						txtTitle.getText().toString(), txtAuthor.getText().toString(), txtPublisher.getText().toString(),
+						txtEdition.getText().toString(), txtVolume.getText().toString(), txtPages.getText().toString(),
+						txtCyear.getText().toString(), txtCsection.getText().toString(), txtCopies.getText().toString(),
+						txtBabarcode.getText().toString(), txtCompletecn.getText().toString(), txtFormat.getText().toString()));
+
+				Toast.makeText(getApplicationContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	private void getIntentTask() {
-		
+
 		String accessno = getIntent().getStringExtra("accessno");
 		String title = getIntent().getStringExtra("title");
 		String author = getIntent().getStringExtra("author");
@@ -72,7 +91,7 @@ public class BookSearch extends Activity {
 		String babarcode = getIntent().getStringExtra("babarcode");
 		String completecn = getIntent().getStringExtra("completecn");
 		String format = getIntent().getStringExtra("format");
-		
+
 		txtAccessno.setText(accessno);
 		txtTitle.setText(title);
 		txtAuthor.setText(author);
@@ -86,7 +105,7 @@ public class BookSearch extends Activity {
 		txtBabarcode.setText(babarcode);
 		txtCompletecn.setText(completecn);
 		txtFormat.setText(format);
-		
+
 	}
 
 }

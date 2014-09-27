@@ -7,9 +7,9 @@
         android:id="@+id/txtView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/txt"
+        android:text="@string/txtfav"
         android:textSize="25sp"
-        android:layout_marginTop="190dp"
+        android:layout_marginTop="230dp"
         android:layout_gravity="center"
         android:visibility="gone" />
 

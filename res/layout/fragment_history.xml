@@ -1,13 +1,25 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".HistoryFragment" >
+    
+    <TextView
+        android:id="@+id/txtView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txthis"
+        android:textSize="25sp"
+        android:layout_marginTop="230dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/lstView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
     </ListView>
 
-</RelativeLayout>
+</LinearLayout>
