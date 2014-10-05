@@ -97,29 +97,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.close();
 	}
 
-	// INSERT TO HISTORY
-	void addHistory(History h) {
-		SQLiteDatabase db = this.getWritableDatabase();
-		ContentValues cv = new ContentValues();
-
-		cv.put(ACCESSNO, h.getAccessno());
-		cv.put(TITLE, h.getTitle());
-		cv.put(AUTHOR, h.getAuthor());
-		cv.put(PUBLISHER, h.getPublisher());
-		cv.put(EDITION, h.getEdition());
-		cv.put(VOLUME, h.getVolume());
-		cv.put(PAGES, h.getPages());
-		cv.put(CYEAR, h.getCyear());
-		cv.put(CSECTION, h.getCsection());
-		cv.put(COPIES, h.getCopies());
-		cv.put(BABARCODE, h.getBabarcode());
-		cv.put(COMPLETECN, h.getCompletecn());
-		cv.put(FORMAT, h.getFormat());
-
-		db.insert(TABLE_HISTORY, null, cv);
-		db.close();
-	}
-
 	// SELECT COMMAND
 	public Cursor getAccessno(String accessno) throws SQLException {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -168,6 +145,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	}
 
+	// INSERT TO HISTORY
+	void addHistory(History h) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+
+		cv.put(ACCESSNO, h.getAccessno());
+		cv.put(TITLE, h.getTitle());
+		cv.put(AUTHOR, h.getAuthor());
+		cv.put(PUBLISHER, h.getPublisher());
+		cv.put(EDITION, h.getEdition());
+		cv.put(VOLUME, h.getVolume());
+		cv.put(PAGES, h.getPages());
+		cv.put(CYEAR, h.getCyear());
+		cv.put(CSECTION, h.getCsection());
+		cv.put(COPIES, h.getCopies());
+		cv.put(BABARCODE, h.getBabarcode());
+		cv.put(COMPLETECN, h.getCompletecn());
+		cv.put(FORMAT, h.getFormat());
+
+		db.insert(TABLE_HISTORY, null, cv);
+		db.close();
+	}
+
 	public List<History> getAllHistory() {
 		List<History> list = new ArrayList<History>();
 		String query = "SELECT * FROM " + TABLE_HISTORY + " ORDER BY " + TITLE + " COLLATE NOCASE";
@@ -205,5 +205,4 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return list;
 
 	}
-
 }

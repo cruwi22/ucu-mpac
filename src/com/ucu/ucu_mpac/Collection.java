@@ -2,11 +2,12 @@ package com.ucu.ucu_mpac;
 
 public class Collection {
 
+	private int id;
+
 	private String accessno;
 	private String title;
 	private String author;
 	private String publisher;
-	
 	private String edition;
 	private String volume;
 	private String pages;
@@ -18,16 +19,21 @@ public class Collection {
 	private String format;
 
 	public Collection() { }
-
-	public Collection(String accessno, String title, String author, String publisher,
-					   String edition, String volume, String pages, String cyear,
-					   String csection, String copies, String babarcode, String completecn, String format) {
+	
+	public Collection(int id) {
+		this.id = id;
+	}
+	
+	public Collection(int id, String accessno, String title, String author,
+			String publisher, String edition, String volume, String pages,
+			String cyear, String csection, String copies, String babarcode,
+			String completecn, String format) {
 		super();
+		this.id = id;
 		this.accessno = accessno;
 		this.title = title;
 		this.author = author;
 		this.publisher = publisher;
-
 		this.edition = edition;
 		this.volume = volume;
 		this.pages = pages;
@@ -37,6 +43,33 @@ public class Collection {
 		this.babarcode = babarcode;
 		this.completecn = completecn;
 		this.format = format;
+	}
+
+	public Collection(String accessno, String title, String author, String publisher,
+					   String edition, String volume, String pages, String cyear,
+					   String csection, String copies, String babarcode, String completecn, String format) {
+		super();
+		this.accessno = accessno;
+		this.title = title;
+		this.author = author;
+		this.publisher = publisher;
+		this.edition = edition;
+		this.volume = volume;
+		this.pages = pages;
+		this.cyear = cyear;
+		this.csection = csection;
+		this.copies = copies;
+		this.babarcode = babarcode;
+		this.completecn = completecn;
+		this.format = format;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getAccessno() {
