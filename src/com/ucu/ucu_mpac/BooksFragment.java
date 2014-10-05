@@ -16,7 +16,6 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,8 +24,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
@@ -78,7 +75,7 @@ public class BooksFragment extends Fragment {
 
 				StringBuilder finalstring = new StringBuilder();
 				InputStream is = getResources().openRawResource(R.raw.collection);
-				
+
 				BufferedReader br = new BufferedReader(new InputStreamReader(is));
 				
 				while((line = br.readLine()) != null){
@@ -133,7 +130,6 @@ public class BooksFragment extends Fragment {
 		}
 		
 		protected void onPostExecute(String result) {
-			dialog.cancel();
 		}
 	}
 
@@ -147,6 +143,7 @@ public class BooksFragment extends Fragment {
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 		searchView.setQueryHint("Search by Title/Author");
 
+		
 	}
 
 	/**
@@ -158,7 +155,7 @@ public class BooksFragment extends Fragment {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
 		case R.id.action_search:
-
+			
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

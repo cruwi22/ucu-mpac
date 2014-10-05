@@ -3,6 +3,7 @@ package com.ucu.ucu_mpac;
 public class History {
 	
 	private int id;
+	private String date;
 	private String accessno;
 	private String title;
 	private String author;
@@ -44,11 +45,12 @@ public class History {
 		this.format = format;
 	}
 
-	public History(String accessno, String title, String author,
+	public History(String date, String accessno, String title, String author,
 			String publisher, String edition, String volume, String pages,
 			String cyear, String csection, String copies, String babarcode,
 			String completecn, String format) {
 		super();
+		this.date = date;
 		this.accessno = accessno;
 		this.title = title;
 		this.author = author;
@@ -70,6 +72,14 @@ public class History {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 
 	public String getAccessno() {

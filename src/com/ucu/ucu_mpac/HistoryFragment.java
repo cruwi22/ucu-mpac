@@ -1,6 +1,9 @@
 package com.ucu.ucu_mpac;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,11 +24,13 @@ public class HistoryFragment extends Fragment {
 	SimpleAdapter adapter;
 	ListView lstview;
 	TextView txtview;
+	SimpleDateFormat formatter = null;
+	Date convertedDate = null;
 
-	String[] from = new String[] { "id", "accessno", "title", "author", "publisher",
+	String[] from = new String[] { "id", "date", "accessno", "title", "author", "publisher",
 			"edition", "volume", "pages", "cyear", "csection", "copies",
 			"babarcode", "completecn", "format" };
-	int[] to = new int[] { R.id.id, R.id.accessno, R.id.title, R.id.author,
+	int[] to = new int[] { R.id.id, R.id.date, R.id.accessno, R.id.title, R.id.author,
 			R.id.publisher, R.id.edition, R.id.volume, R.id.pages, R.id.cyear,
 			R.id.csection, R.id.copies, R.id.babarcode, R.id.completecn,
 			R.id.format };
@@ -38,7 +43,7 @@ public class HistoryFragment extends Fragment {
 
 		lstview = (ListView) rootView.findViewById(R.id.lstView);
 		txtview = (TextView) rootView.findViewById(R.id.txtView);
-		
+
 		return rootView;
 	}
 	
@@ -55,10 +60,17 @@ public class HistoryFragment extends Fragment {
 		List<HashMap<String, String>> listahan = new ArrayList<HashMap<String, String>>();
 
 		for (History h : list) {
-
+			String date = h.getDate();
+			formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+			try {
+				convertedDate = (Date) formatter.parse(date);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			HashMap<String, String> map = new HashMap<String, String>();
 
 			map.put("id", h.getId() + "");
+			map.put("date", new PrettyDate(convertedDate).toString());
 			map.put("accessno", h.getAccessno());
 			map.put("title", h.getTitle());
 			map.put("author", h.getAuthor());
@@ -76,7 +88,7 @@ public class HistoryFragment extends Fragment {
 			listahan.add(map);
 		}
 
-		adapter = new SimpleAdapter(getActivity(), listahan, R.layout.favorites_layout, from, to);
+		adapter = new SimpleAdapter(getActivity(), listahan, R.layout.listview_layout, from, to);
 		lstview.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 

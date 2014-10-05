@@ -21,6 +21,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static String TABLE_HISTORY = "tblHistory";
 	// COLUMNS
 	private static String ID = "id";
+	private static String DATE = "date";
 	private static String ACCESSNO = "accessno";
 	private static String TITLE = "title";
 	private static String AUTHOR = "author";
@@ -43,7 +44,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			+ " TEXT, " + COMPLETECN + " TEXT, " + FORMAT + " TEXT " + ")";
 
 	private static final String history = "CREATE TABLE " + TABLE_HISTORY
-			+ "(" + ID + " INTEGER PRIMARY KEY, " + ACCESSNO + " TEXT, " + TITLE
+			+ "(" + ID + " INTEGER PRIMARY KEY, " + DATE + " TEXT, " + ACCESSNO + " TEXT, " + TITLE
 			+ " TEXT, " + AUTHOR + " TEXT, " + PUBLISHER + " TEXT, " + EDITION
 			+ " TEXT, " + VOLUME + " TEXT, " + PAGES + " TEXT, " + CYEAR
 			+ " TEXT, " + CSECTION + " TEXT, " + COPIES + " TEXT, " + BABARCODE
@@ -150,6 +151,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues cv = new ContentValues();
 
+		cv.put(DATE, h.getDate());
 		cv.put(ACCESSNO, h.getAccessno());
 		cv.put(TITLE, h.getTitle());
 		cv.put(AUTHOR, h.getAuthor());
@@ -170,7 +172,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	public List<History> getAllHistory() {
 		List<History> list = new ArrayList<History>();
-		String query = "SELECT * FROM " + TABLE_HISTORY + " ORDER BY " + TITLE + " COLLATE NOCASE";
+		String query = "SELECT * FROM " + TABLE_HISTORY + " ORDER BY " + ID + " DESC";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor c = db.rawQuery(query, null);
@@ -182,19 +184,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				History his = new History();
 
 				his.setId(Integer.parseInt(c.getString(0)));
-				his.setAccessno(c.getString(1));
-				his.setTitle(c.getString(2));
-				his.setAuthor(c.getString(3));
-				his.setPublisher(c.getString(4));
-				his.setEdition(c.getString(5));
-				his.setVolume(c.getString(6));
-				his.setPages(c.getString(7));
-				his.setCyear(c.getString(8));
-				his.setCsection(c.getString(9));
-				his.setCopies(c.getString(10));
-				his.setBabarcode(c.getString(11));
-				his.setCompletecn(c.getString(12));
-				his.setFormat(c.getString(13));
+				his.setDate(c.getString(1));
+				his.setAccessno(c.getString(2));
+				his.setTitle(c.getString(3));
+				his.setAuthor(c.getString(4));
+				his.setPublisher(c.getString(5));
+				his.setEdition(c.getString(6));
+				his.setVolume(c.getString(7));
+				his.setPages(c.getString(8));
+				his.setCyear(c.getString(9));
+				his.setCsection(c.getString(10));
+				his.setCopies(c.getString(11));
+				his.setBabarcode(c.getString(12));
+				his.setCompletecn(c.getString(13));
+				his.setFormat(c.getString(14));
 
 				list.add(his);
 

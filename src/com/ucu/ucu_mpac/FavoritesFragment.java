@@ -118,7 +118,7 @@ public class FavoritesFragment extends Fragment {
 			listahan.add(map);
 		}
 
-		adapter = new SimpleAdapter(getActivity(), listahan, R.layout.favorites_layout, from, to);
+		adapter = new SimpleAdapter(getActivity(), listahan, R.layout.listview_layout, from, to);
 		lstview.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
