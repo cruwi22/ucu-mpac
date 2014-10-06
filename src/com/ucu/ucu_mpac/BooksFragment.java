@@ -130,6 +130,59 @@ public class BooksFragment extends Fragment {
 		}
 		
 		protected void onPostExecute(String result) {
+			dialog.cancel();
+			
+			adapter = new SimpleAdapter(getActivity(), booklist, R.layout.listview_layout, from, to);
+			lstview.setAdapter(adapter);
+			adapter.notifyDataSetChanged();
+			
+			/*lstview.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					
+					String date = null;
+					if (null == date) {
+						date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date());
+ 		 			}
+					
+					String accessno = booklist.get(position).get("accessno");
+					String title = booklist.get(position).get("title");
+					String author = booklist.get(position).get("author");
+					String publisher = booklist.get(position).get("publisher");
+					String edition = booklist.get(position).get("edition");
+					String volume = booklist.get(position).get("volume");
+					String pages = booklist.get(position).get("pages");
+					String cyear = booklist.get(position).get("cyear");
+					String csection = booklist.get(position).get("csection");
+					String copies = booklist.get(position).get("copies");
+					String babarcode = booklist.get(position).get("babarcode");
+					String completecn = booklist.get(position).get("completecn");
+					String format = booklist.get(position).get("format");
+					
+					db.addHistory(new History(date, accessno, title, author, publisher, edition, volume, pages,
+							cyear, csection, copies,
+							babarcode, completecn, format));
+
+					Intent intent = new Intent(getActivity(), BookSearch.class);
+					intent.putExtra("accessno", accessno);
+					intent.putExtra("title", title);
+					intent.putExtra("author", author);
+					intent.putExtra("publisher", publisher);
+					intent.putExtra("edition", edition);
+					intent.putExtra("volume", volume);
+					intent.putExtra("pages", pages);
+					intent.putExtra("cyear", cyear);
+					intent.putExtra("csection", csection);
+					intent.putExtra("copies", copies);
+					intent.putExtra("babarcode", babarcode);
+					intent.putExtra("completecn", completecn);
+					intent.putExtra("format", format);
+					startActivity(intent);
+					getActivity().overridePendingTransition( R.animator.anim_leftout, R.animator.anim_rightin);
+				}
+
+			});*/
 		}
 	}
 
