@@ -19,6 +19,8 @@ import android.widget.ListView;
 
 public class MainActivity extends Activity {
 	
+	DatabaseHandler db = new DatabaseHandler(this);
+	
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -40,6 +42,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		db.DropTable();
 
 		mTitle = mDrawerTitle = getTitle();
 
@@ -207,6 +211,12 @@ public class MainActivity extends Activity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		db.DropTable();
 	}
 	
 }

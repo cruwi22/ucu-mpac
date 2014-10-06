@@ -17,6 +17,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	// DATABASE
 	private static String DATABASE_NAME = "dbBook";
 	// TABLE
+	private static String TABLE_COLLECTION = "tblCollection";
 	private static String TABLE_FAVORITES = "tblFavorites";
 	private static String TABLE_HISTORY = "tblHistory";
 	// COLUMNS
@@ -35,7 +36,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static String BABARCODE = "babarcode";
 	private static String COMPLETECN = "completecn";
 	private static String FORMAT = "format";
-
+	
+	private static final String collection = "CREATE TABLE " + TABLE_COLLECTION
+			+ "(" + ID + " INTEGER, " + ACCESSNO + " TEXT PRIMARY KEY, " + TITLE
+			+ " TEXT, " + AUTHOR + " TEXT, " + PUBLISHER + " TEXT, " + EDITION
+			+ " TEXT, " + VOLUME + " TEXT, " + PAGES + " TEXT, " + CYEAR
+			+ " TEXT, " + CSECTION + " TEXT, " + COPIES + " TEXT, " + BABARCODE
+			+ " TEXT, " + COMPLETECN + " TEXT, " + FORMAT + " TEXT " + ")";
+	
 	private static final String favorites = "CREATE TABLE " + TABLE_FAVORITES
 			+ "(" + ID + " INTEGER PRIMARY KEY, " + ACCESSNO + " TEXT, " + TITLE
 			+ " TEXT, " + AUTHOR + " TEXT, " + PUBLISHER + " TEXT, " + EDITION
@@ -56,18 +64,117 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		db.execSQL(collection);
 		db.execSQL(favorites);
 		db.execSQL(history);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_COLLECTION);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_HISTORY);
 		onCreate(db);
 
 	}
+	
+	void DropTable() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		onUpgrade(db, 1, 1);
+	}
+	
+	// INSERT TO COLLECTION
+	void addCollection(Collection c) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues cv = new ContentValues();
 
+		cv.put(ID, c.getId());
+		cv.put(ACCESSNO, c.getAccessno());
+		cv.put(TITLE, c.getTitle());
+		cv.put(AUTHOR, c.getAuthor());
+		cv.put(PUBLISHER, c.getPublisher());
+		cv.put(EDITION, c.getEdition());
+		cv.put(VOLUME, c.getVolume());
+		cv.put(PAGES, c.getPages());
+		cv.put(CYEAR, c.getCyear());
+		cv.put(CSECTION, c.getCsection());
+		cv.put(COPIES, c.getCopies());
+		cv.put(BABARCODE, c.getBabarcode());
+		cv.put(COMPLETECN, c.getCompletecn());
+		cv.put(FORMAT, c.getFormat());
+
+		db.insert(TABLE_COLLECTION, null, cv);
+		db.close();
+	}
+	
+	public Collection search(String title) {
+
+		String selectQuery = "SELECT  * FROM " + TABLE_COLLECTION + " WHERE " + TITLE + " = " + title;
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+
+		if (c != null)
+			c.moveToFirst();
+
+			Collection col = new Collection();
+			
+			col.setId(Integer.parseInt(c.getString(0)));
+			col.setAccessno(c.getString(1));
+			col.setTitle(c.getString(2));
+			col.setAuthor(c.getString(3));
+			col.setPublisher(c.getString(4));
+			col.setEdition(c.getString(5));
+			col.setVolume(c.getString(6));
+			col.setPages(c.getString(7));
+			col.setCyear(c.getString(8));
+			col.setCsection(c.getString(9));
+			col.setCopies(c.getString(10));
+			col.setBabarcode(c.getString(11));
+			col.setCompletecn(c.getString(12));
+			col.setFormat(c.getString(13));
+
+		return col;
+	}
+	
+	public List<Collection> getAllCollection() {
+		List<Collection> list = new ArrayList<Collection>();
+		String query = "SELECT * FROM " + TABLE_COLLECTION + " ORDER BY " + TITLE + " COLLATE NOCASE";
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor c = db.rawQuery(query, null);
+
+		if (c.moveToFirst()) {
+
+			do {
+
+				Collection col = new Collection();
+
+				col.setId(Integer.parseInt(c.getString(0)));
+				col.setAccessno(c.getString(1));
+				col.setTitle(c.getString(2));
+				col.setAuthor(c.getString(3));
+				col.setPublisher(c.getString(4));
+				col.setEdition(c.getString(5));
+				col.setVolume(c.getString(6));
+				col.setPages(c.getString(7));
+				col.setCyear(c.getString(8));
+				col.setCsection(c.getString(9));
+				col.setCopies(c.getString(10));
+				col.setBabarcode(c.getString(11));
+				col.setCompletecn(c.getString(12));
+				col.setFormat(c.getString(13));
+
+				list.add(col);
+
+			} while (c.moveToNext());
+
+		}
+
+		return list;
+
+	}
+	
 	// INSERT TO FAVORITES
 	void addFavorites(Favorites f) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -97,14 +204,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.delete(TABLE_FAVORITES, ID + " = ?", new String[] { String.valueOf(f.getId()) });
 		db.close();
 	}
-
+	
 	// SELECT COMMAND
 	public Cursor getAccessno(String accessno) throws SQLException {
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor c = db.query(true, TABLE_FAVORITES, new String[] { ACCESSNO,
-				TITLE, AUTHOR, PUBLISHER, EDITION, VOLUME, PAGES, CYEAR,
-				CSECTION, COPIES, BABARCODE, COMPLETECN, FORMAT }, ACCESSNO
-				+ "='" + accessno + "' ", null, null, null, null, null);
+					TITLE, AUTHOR, PUBLISHER, EDITION, VOLUME, PAGES, CYEAR,
+					CSECTION, COPIES, BABARCODE, COMPLETECN, FORMAT }, ACCESSNO
+					+ "='" + accessno + "' ", null, null, null, null, null);
 		return c;
 	}
 
