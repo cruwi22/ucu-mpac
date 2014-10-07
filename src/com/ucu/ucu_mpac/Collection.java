@@ -40,6 +40,26 @@ public class Collection {
 		this.format = format;
 	}
 	
+	public Collection(String accessno, String title, String author,
+			String publisher, String edition, String volume, String pages,
+			String cyear, String csection, String copies, String babarcode,
+			String completecn, String format) {
+		super();
+		this.accessno = accessno;
+		this.title = title;
+		this.author = author;
+		this.publisher = publisher;
+		this.edition = edition;
+		this.volume = volume;
+		this.pages = pages;
+		this.cyear = cyear;
+		this.csection = csection;
+		this.copies = copies;
+		this.babarcode = babarcode;
+		this.completecn = completecn;
+		this.format = format;
+	}
+	
 	public int getId() {
 		return id;
 	}

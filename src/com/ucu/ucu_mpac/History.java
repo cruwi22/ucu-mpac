@@ -19,10 +19,6 @@ public class History {
 	private String format;
 
 	public History() { }
-
-	public History(int id) {
-		this.id = id;
-	}
 	
 	public History(int id, String accessno, String title, String author,
 			String publisher, String edition, String volume, String pages,

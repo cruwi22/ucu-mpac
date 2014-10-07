@@ -11,7 +11,9 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -19,44 +21,62 @@ import android.widget.TextView;
 public class HistoryFragment extends Fragment {
 
 	public HistoryFragment() { }
-	
+
 	DatabaseHandler db;
 	SimpleAdapter adapter;
 	ListView lstview;
 	TextView txtview;
+	Button btnClear;
 	SimpleDateFormat formatter = null;
 	Date convertedDate = null;
 
-	String[] from = new String[] { "id", "date", "accessno", "title", "author", "publisher",
-			"edition", "volume", "pages", "cyear", "csection", "copies",
-			"babarcode", "completecn", "format" };
-	int[] to = new int[] { R.id.id, R.id.date, R.id.accessno, R.id.title, R.id.author,
-			R.id.publisher, R.id.edition, R.id.volume, R.id.pages, R.id.cyear,
-			R.id.csection, R.id.copies, R.id.babarcode, R.id.completecn,
-			R.id.format };
+	String[] from = new String[] { "id", "date", "accessno", "title", "author",
+			"publisher", "edition", "volume", "pages", "cyear", "csection",
+			"copies", "babarcode", "completecn", "format" };
+	int[] to = new int[] { R.id.id, R.id.date, R.id.accessno, R.id.title,
+			R.id.author, R.id.publisher, R.id.edition, R.id.volume, R.id.pages,
+			R.id.cyear, R.id.csection, R.id.copies, R.id.babarcode,
+			R.id.completecn, R.id.format };
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_history, container, false);
-		
+
 		db = new DatabaseHandler(getActivity());
 
 		lstview = (ListView) rootView.findViewById(R.id.lstView);
 		txtview = (TextView) rootView.findViewById(R.id.txtView);
+		btnClear = (Button) rootView.findViewById(R.id.btnClear);
 
+		btnClear();
+		
 		return rootView;
 	}
 	
+	public void btnClear() {
+		btnClear.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				db.clearHistory();
+				populateList();
+			}
+			
+		});
+	}
+
 	public void populateList() {
 
 		List<History> list = db.getAllHistory();
-		
+
 		if (list.size() == 0) {
 			txtview.setVisibility(View.VISIBLE);
+			btnClear.setVisibility(View.GONE);
 		} else {
 			lstview.setVisibility(View.VISIBLE);
+			btnClear.setVisibility(View.VISIBLE);
 		}
-		
+
 		List<HashMap<String, String>> listahan = new ArrayList<HashMap<String, String>>();
 
 		for (History h : list) {
@@ -93,11 +113,11 @@ public class HistoryFragment extends Fragment {
 		adapter.notifyDataSetChanged();
 
 	}
-	
+
 	@Override
-    public void onStart(){
-    	super.onStart();
-    	populateList();
-    }
+	public void onStart() {
+		super.onStart();
+		populateList();
+	}
 
 }

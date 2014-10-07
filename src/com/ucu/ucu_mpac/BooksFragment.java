@@ -32,10 +32,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.SimpleAdapter;
 
-public class BooksFragment extends Fragment {
+public class BooksFragment extends Fragment implements SearchView.OnQueryTextListener {
 
 	public BooksFragment() {
 	}
@@ -45,6 +44,7 @@ public class BooksFragment extends Fragment {
 	SimpleAdapter adapter;
 	List<HashMap<String, String>> booklist;
 	JSONAsyncTask load;
+	SearchView searchView;
 
 	String[] from = new String[] { "accessno", "title", "author", "publisher",
 			"edition", "volume", "pages", "cyear", "csection", "copies",
@@ -55,10 +55,8 @@ public class BooksFragment extends Fragment {
 			R.id.format };
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_books, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_books, container, false);
 		setHasOptionsMenu(true);
 
 		db = new DatabaseHandler(getActivity());
@@ -74,109 +72,33 @@ public class BooksFragment extends Fragment {
 
 	}
 
-	class JSONAsyncTask extends AsyncTask<String, Void, String> {
-
-		ProgressDialog dialog;
-
-		@Override
-		protected String doInBackground(String... urls) {
-			String line = "";
-
-			try {
-
-				StringBuilder finalstring = new StringBuilder();
-				InputStream is = getResources().openRawResource(
-						R.raw.collection);
-
-				BufferedReader br = new BufferedReader(
-						new InputStreamReader(is));
-
-				while ((line = br.readLine()) != null) {
-					finalstring.append(line);
-				}
-
-				JSONObject collectionObject = new JSONObject(finalstring + "");
-				JSONArray bookarray = collectionObject.getJSONArray("book");
-
-				for (int i = 0; i < bookarray.length(); i++) {
-					JSONObject object = bookarray.getJSONObject(i);
-
-					String accessno = object.getString("_accessno").toString();
-					String title = object.getString("title").toString();
-					String author = object.getString("author").toString();
-					String publisher = object.getString("publisher").toString();
-					String edition = object.getString("edition").toString();
-					String volume = object.getString("volume").toString();
-					String pages = object.getString("pages").toString();
-					String cyear = object.getString("cyear").toString();
-					String csection = object.getString("csection").toString();
-					String copies = object.getString("copies").toString();
-					String babarcode = object.getString("babarcode").toString();
-					String completecn = object.getString("completecn")
-							.toString();
-					String format = object.getString("format").toString();
-
-					db.addCollection(new Collection(i, accessno, title, author,
-							publisher, edition, volume, pages, cyear, csection,
-							copies, babarcode, completecn, format));
-				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-
-			return null;
-
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			dialog = new ProgressDialog(getActivity());
-			dialog.setTitle("Loading");
-			dialog.setMessage("Please wait...");
-			dialog.show();
-			dialog.setCancelable(false);
-		}
-
-		protected void onPostExecute(String result) {
-			dialog.cancel();
-			populate();
-		}
-	}
-
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.searchview, menu);
-		final SearchView searchView;
-		// Associate searchable configuration with the SearchView
+
 		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 		searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 		searchView.setQueryHint("Search by Title/Author");
+		searchView.setOnQueryTextListener(this);
+	}
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
 		
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+		if(TextUtils.isEmpty(newText.toString())) {
+			populate();
+		} else {
+			searchCollection(newText);
+		}
+		
+		return false;
+	}
 
-			@Override
-			public boolean onQueryTextChange(String query) {
-
-				if (TextUtils.isEmpty(searchView.getQuery().toString())) {
-					populate();
-				} else {
-				}
-
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-
-				return false;
-			}
-
-		});
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		
+		return false;
 	}
 
 	/**
@@ -230,8 +152,7 @@ public class BooksFragment extends Fragment {
 			booklist.add(map);
 		}
 
-		adapter = new SimpleAdapter(getActivity(), booklist,
-				R.layout.listview_layout, from, to);
+		adapter = new SimpleAdapter(getActivity(), booklist, R.layout.listview_layout, from, to);
 		lstview.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
@@ -281,10 +202,42 @@ public class BooksFragment extends Fragment {
 				intent.putExtra("completecn", completecn);
 				intent.putExtra("format", format);
 				startActivity(intent);
-				getActivity().overridePendingTransition(
-						R.animator.anim_leftout, R.animator.anim_rightin);
+				getActivity().overridePendingTransition(R.animator.anim_leftout, R.animator.anim_rightin);
 			}
 
 		});
-	}	
+	}
+	
+	public void searchCollection(String query) {
+		
+		List<Collection> list = db.getCollection(query.toString());
+		
+		booklist = new ArrayList<HashMap<String, String>>();
+		
+		for (Collection c : list) {
+
+			HashMap<String, String> map = new HashMap<String, String>();
+
+			map.put("id", c.getId() + "");
+			map.put("accessno", c.getAccessno());
+			map.put("title", c.getTitle());
+			map.put("author", c.getAuthor());
+			map.put("publisher", c.getPublisher());
+			map.put("edition", c.getEdition());
+			map.put("volume", c.getVolume());
+			map.put("pages", c.getPages());
+			map.put("cyear", c.getCyear());
+			map.put("csection", c.getCsection());
+			map.put("copies", c.getCopies());
+			map.put("babarcode", c.getBabarcode());
+			map.put("completecn", c.getCompletecn());
+			map.put("format", c.getFormat());
+
+			booklist.add(map);
+		}
+		
+		adapter = new SimpleAdapter(getActivity(), booklist, R.layout.listview_layout, from, to);
+		lstview.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
+	}
 }

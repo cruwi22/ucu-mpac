@@ -26,6 +26,7 @@
     
     <string name="btnFav">Add to favorites</string>
     <string name="txtfav">No added favorites</string>
+    <string name="btnClear">Clear History</string>
     <string name="txthis">No recent history</string>
     
     <!-- Nav Drawer Menu Items -->

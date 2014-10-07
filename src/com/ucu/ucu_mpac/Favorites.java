@@ -18,7 +18,7 @@ public class Favorites {
 	private String format;
 
 	public Favorites() { }
-
+	
 	public Favorites(int id) {
 		this.id = id;
 	}
